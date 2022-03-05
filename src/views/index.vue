@@ -72,10 +72,8 @@ export default {
                     tableNames.push(tableName.tableName)
                 })
                 createCode(tableNames).then(response => {
-                    this.$message.success("代码生成成功")
-                    /*const blob = new Blob([response], {type: 'application/zip'})
-                    console.log(blob);
-                    saveAs(blob, "xiaofei-generator");*/
+                    const blob = new Blob([response], {type: 'application/zip'})
+                    saveAs(blob, "xiaofei-generator");
                 })
             } else {
                 this.$message.info("请选择需要生成代码的表")

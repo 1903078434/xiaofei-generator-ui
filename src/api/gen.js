@@ -19,6 +19,7 @@ export function createCode(tableNames) {
     return request({
         url: `/create`,
         method: "post",
+        responseType: 'blob',
         data: tableNames
     })
 }
