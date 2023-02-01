@@ -2,8 +2,8 @@
     <div>
         <el-row :gutter="20" style="margin: 50px 0">
             <el-col :span="12" :offset="6">
-                <el-col :span="4">
-                    <el-input clearable v-model="tableName" placeholder="输入要过滤的表名"></el-input>
+                <el-col :span="8">
+                    <el-input clearable v-model="tableName" placeholder="输入要过滤的表名 / 表备注"></el-input>
                 </el-col>
                 <el-col :span="2">
                     <el-button type="success" @click="tableList">查询</el-button>
@@ -24,7 +24,8 @@
             <el-col style="margin-top: 20px;" :span="12" :offset="6">
                 <el-pagination @size-change="changePageSize" @current-change="changePageNo"
                                :current-page="page.pageNo" :total="page.itemCount" background
-                               :page-sizes="[10,20,30,40,50]" :page-size="page.pageSize"
+                               :page-sizes="[10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]"
+                               :page-size="page.pageSize"
                                layout="total, sizes, prev, pager, next, jumper">
                 </el-pagination>
             </el-col>
@@ -44,7 +45,7 @@ export default {
         return {
             page: {
                 pageNo: 1,
-                pageSize: 10,
+                pageSize: 15,
                 pageTotal: 3,
                 itemCount: 30,
                 items: [],
