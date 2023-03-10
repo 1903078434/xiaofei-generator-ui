@@ -3,7 +3,7 @@ import request from '@/utils/request'
 /**
  * 获取表的信息
  */
-export function tableList(tableName, pageNo=1, pageSize=10) {
+export function tableList(tableName, pageNo = 1, pageSize = 10) {
     return request({
         url: `/list`,
         method: "get",
@@ -15,12 +15,16 @@ export function tableList(tableName, pageNo=1, pageSize=10) {
     })
 }
 
-export function createCode(tableNames) {
+export function createCode(generatorEntity, isUse, tableNames) {
     return request({
         url: `/create`,
         method: "post",
         responseType: 'blob',
-        data: tableNames
+        data: {
+            generatorEntity: generatorEntity,
+            isUse: isUse,
+            tableNames: tableNames
+        }
     })
 }
 

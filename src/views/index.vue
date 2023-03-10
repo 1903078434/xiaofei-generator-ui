@@ -9,7 +9,7 @@
                     <el-button type="success" @click="tableList">查询</el-button>
                 </el-col>
                 <el-col :span="2">
-                    <el-button type="primary" @click="code">生成</el-button>
+                    <el-button type="primary" @click="dialogOpen">生成</el-button>
                 </el-col>
             </el-col>
             <el-col :span="12" :offset="6">
@@ -30,16 +30,95 @@
                 </el-pagination>
             </el-col>
         </el-row>
+
+        <!-- 设置添加或修改弹窗 -->
+        <el-dialog :before-close="dialogCancel" :title="dialogTitle" :visible.sync="dialogVisible">
+            <el-form :model="formData" label-width="300px">
+                <el-form-item label="用户" prop="user">
+                    <el-input v-model="formData.user"></el-input>
+                </el-form-item>
+                <el-form-item label="作者" prop="author">
+                    <el-input v-model="formData.author"></el-input>
+                </el-form-item>
+                <el-form-item label="包名" prop="packageName">
+                    <el-input v-model="formData.packageName"></el-input>
+                </el-form-item>
+                <el-form-item label="模块名" prop="moduleName">
+                    <el-input v-model="formData.moduleName"></el-input>
+                </el-form-item>
+                <el-form-item label="忽略表前缀" prop="ignoreTablePrefix">
+                    <el-input v-model="formData.ignoreTablePrefix"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="formData.email"></el-input>
+                </el-form-item>
+                <el-form-item label="项目名称" prop="programName">
+                    <el-input v-model="formData.programName"></el-input>
+                </el-form-item>
+                <el-form-item label="项目名称转大写" prop="programNameUpperCase">
+                    <el-input v-model="formData.programNameUpperCase"></el-input>
+                </el-form-item>
+                <el-form-item label="项目描述" prop="programDesc">
+                    <el-input v-model="formData.programDesc"></el-input>
+                </el-form-item>
+                <el-form-item label="项目版本" prop="programVersion">
+                    <el-input v-model="formData.programVersion"></el-input>
+                </el-form-item>
+                <el-form-item label="是否开启swagger" prop="enableSwagger">
+                    <el-radio v-model="formData.enableSwagger" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableSwagger" :label="true">开启</el-radio>
+                </el-form-item>
+                <el-form-item label="是否开启Spring Cache" prop="enableSpringCache">
+                    <el-radio v-model="formData.enableSpringCache" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableSpringCache" :label="true">开启</el-radio>
+                </el-form-item>
+                <el-form-item label="是否开启JSR303数据校验" prop="enableValidated">
+                    <el-radio v-model="formData.enableValidated" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableValidated" :label="true">开启</el-radio>
+                </el-form-item>
+                <el-form-item label="数据库IP" prop="dataBaseHost">
+                    <el-input v-model="formData.dataBaseHost"></el-input>
+                </el-form-item>
+                <el-form-item label="数据库端口" prop="dataBasePort">
+                    <el-input v-model="formData.dataBasePort"></el-input>
+                </el-form-item>
+                <el-form-item label="数据库名字" prop="dataBaseName">
+                    <el-input v-model="formData.dataBaseName"></el-input>
+                </el-form-item>
+                <el-form-item label="数据库用户名" prop="dataBaseUserName">
+                    <el-input v-model="formData.dataBaseUserName"></el-input>
+                </el-form-item>
+                <el-form-item label="数据库密码" prop="dataBasePassword">
+                    <el-input v-model="formData.dataBasePassword"></el-input>
+                </el-form-item>
+                <el-form-item label="数据库版本 【8.x和5.x】" prop="dataBaseVersion">
+                    <el-radio v-model="formData.dataBaseVersion" label="5.x">5.x</el-radio>
+                    <el-radio v-model="formData.dataBaseVersion" label="8.x">8.x</el-radio>
+                </el-form-item>
+                <el-form-item label="使用前端界面配置还是很后端配置" prop="dataBaseVersion">
+                    <el-radio v-model="isUse" :label="0">前端</el-radio>
+                    <el-radio v-model="isUse" :label="1">后端</el-radio>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogCancel">取 消</el-button>
+                <el-button type="primary" @click="code">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import {tableList, createCode} from "@/api/gen";
 import {saveAs} from 'file-saver'
+// 引入vuex中的mapState
+import {mapState, mapMutations} from 'vuex'
 
 export default {
     created() {
         this.tableList();
+        this.formData = this.$store.state.generatorEntity.generatorEntity
+        this.isUse = this.$store.state.generatorEntity.isUse
     },
     data() {
         return {
@@ -55,9 +134,18 @@ export default {
             },
             tableName: "",
             multipleSelection: [],
+            isUse: 0,//使用前端对代码生成的配置还是使用后端给的配置【0：前端   1：后端】
+            formData: {},
+            //数据加载动画
+            dataListLoading: false,
+            //弹窗标题
+            dialogTitle: "",
+            //弹窗是否显示
+            dialogVisible: false,
         };
     },
     methods: {
+        ...mapMutations('generatorEntity', ['setGeneratorEntity', 'setIsUse']),
         tableList() {
             tableList(this.tableName, this.page.pageNo, this.page.pageSize).then((response) => {
                 this.page = response.data;
@@ -67,12 +155,14 @@ export default {
             this.multipleSelection = val;
         },
         code() {
+            this.setGeneratorEntity(this.formData)
+            this.setIsUse(this.isUse)
             if (this.multipleSelection.length > 0) {
                 let tableNames = []
                 this.multipleSelection.forEach(tableName => {
                     tableNames.push(tableName.tableName)
                 })
-                createCode(tableNames).then(response => {
+                createCode(this.formData, this.isUse, tableNames).then(response => {
                     const blob = new Blob([response], {type: 'application/zip'})
                     saveAs(blob, "xiaofei-generator");
                 })
@@ -84,14 +174,25 @@ export default {
         changePageSize(pageSize) {
             this.page.pageSize = pageSize
             this.tableList()
-        }
-        ,
+        },
         //修改当前页，上一页或下一页
         changePageNo(pageNo) {
             this.page.pageNo = pageNo
             this.tableList()
-        }
-        ,
+        },
+        //打开表单
+        dialogOpen() {
+            if (this.multipleSelection.length > 0) {
+                this.dialogVisible = true
+            } else {
+                this.$message.info("请选择需要生成代码的表")
+            }
+        },
+        //dialog中表单清空
+        dialogCancel() {
+            this.dialogVisible = false
+        },
+
     },
 }
 ;

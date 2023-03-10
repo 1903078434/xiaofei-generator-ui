@@ -1,8 +1,8 @@
-import axios from 'axios' 
+import axios from 'axios'
 
 // 创建axios实例
-const service = axios.create({ 
-    baseURL: `/api`,
+const service = axios.create({
+    //baseURL: `/api`,
     // 设置超时时间，如果该时间内，还是没有响应，则请求失败，开发的时候可以调大一点
     timeout: 1000000
 })
