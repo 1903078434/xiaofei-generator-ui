@@ -1,18 +1,22 @@
 <template>
-    <div>
-        <el-row :gutter="20" style="margin: 50px 0">
-            <el-col :span="12" :offset="6">
-                <el-col :span="8">
-                    <el-input clearable v-model="tableName" placeholder="输入要过滤的表名 / 表备注"></el-input>
-                </el-col>
-                <el-col :span="2">
-                    <el-button type="success" @click="tableList">查询</el-button>
-                </el-col>
-                <el-col :span="2">
-                    <el-button type="primary" @click="dialogOpen">生成</el-button>
-                </el-col>
+    <div style="max-width: 1200px;margin: 0 auto">
+
+        <!-- 顶部搜素 -->
+        <el-row type="flex" class="row-bg" justify="space-between">
+            <el-col :span="10">
+                <el-input clearable v-model="tableName" placeholder="输入要过滤的表名 / 表备注"></el-input>
             </el-col>
-            <el-col :span="12" :offset="6">
+            <el-col :span="3">
+                <el-button type="success" @click="tableList">查询</el-button>
+            </el-col>
+            <el-col :span="5">
+                <el-button type="primary" @click="dialogOpen">生成</el-button>
+            </el-col>
+        </el-row>
+
+        <!-- 表格展示内容 -->
+        <el-row>
+            <el-col>
                 <el-table ref="multipleTable" :data="page.items" tooltip-effect="dark"
                           style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="55"/>
@@ -21,12 +25,16 @@
                     <el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
                 </el-table>
             </el-col>
-            <el-col style="margin-top: 20px;" :span="12" :offset="6">
+        </el-row>
+
+        <!-- 分页展示 -->
+        <el-row>
+            <el-col style="margin-top: 20px;">
                 <el-pagination @size-change="changePageSize" @current-change="changePageNo"
-                               :current-page="page.pageNo" :total="page.itemCount" background
+                               :hide-on-single-page="page.hasNext"
+                               :total="page.itemCount" :current-page="page.pageNo" :page-size="page.pageSize" background
                                :page-sizes="[10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]"
-                               :page-size="page.pageSize"
-                               layout="total, sizes, prev, pager, next, jumper">
+                               layout="total, sizes, prev, pager, next">
                 </el-pagination>
             </el-col>
         </el-row>
@@ -112,7 +120,7 @@
 import {tableList, createCode} from "@/api/gen";
 import {saveAs} from 'file-saver'
 // 引入vuex中的mapState
-import {mapState, mapMutations} from 'vuex'
+import {mapMutations} from 'vuex'
 
 export default {
     created() {
@@ -145,15 +153,19 @@ export default {
         };
     },
     methods: {
+        //获取vuex中的函数
         ...mapMutations('generatorEntity', ['setGeneratorEntity', 'setIsUse']),
+        //获取表信息
         tableList() {
             tableList(this.tableName, this.page.pageNo, this.page.pageSize).then((response) => {
                 this.page = response.data;
             });
         },
+        //多选框选择触发函数
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        //代码生成
         code() {
             this.setGeneratorEntity(this.formData)
             this.setIsUse(this.isUse)
@@ -195,8 +207,10 @@ export default {
 
     },
 }
-;
 </script>
 
-<style>
+<style scoped>
+.customer-line-height {
+    margin: 10px 0;
+}
 </style>
