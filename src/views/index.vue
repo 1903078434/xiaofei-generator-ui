@@ -40,72 +40,73 @@
         </el-row>
 
         <!-- 设置添加或修改弹窗 -->
-        <el-dialog :before-close="dialogCancel" :title="dialogTitle" :visible.sync="dialogVisible">
-            <el-form :model="formData" label-width="300px">
-                <el-form-item label="用户" prop="user">
-                    <el-input v-model="formData.user"></el-input>
+        <el-dialog :before-close="dialogCancel" :title="dialogTitle" :visible.sync="dialogVisible" width="1000px"
+                   append-to-body>
+            <el-form :model="formData" label-position="left" label-width="230px" :inline="true">
+                <el-form-item style="padding: 0 50px 0 0" label="用户" prop="user">
+                    <el-input style="width: 180px" v-model="formData.user"></el-input>
                 </el-form-item>
-                <el-form-item label="作者" prop="author">
-                    <el-input v-model="formData.author"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="作者" prop="author">
+                    <el-input style="width: 180px" v-model="formData.author"></el-input>
                 </el-form-item>
-                <el-form-item label="包名" prop="packageName">
-                    <el-input v-model="formData.packageName"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="包名" prop="packageName">
+                    <el-input style="width: 180px" v-model="formData.packageName"></el-input>
                 </el-form-item>
-                <el-form-item label="模块名" prop="moduleName">
-                    <el-input v-model="formData.moduleName"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="模块名" prop="moduleName">
+                    <el-input style="width: 180px" v-model="formData.moduleName"></el-input>
                 </el-form-item>
-                <el-form-item label="忽略表前缀" prop="ignoreTablePrefix">
-                    <el-input v-model="formData.ignoreTablePrefix"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="忽略表前缀" prop="ignoreTablePrefix">
+                    <el-input style="width: 180px" v-model="formData.ignoreTablePrefix"></el-input>
                 </el-form-item>
-                <el-form-item label="邮箱" prop="email">
-                    <el-input v-model="formData.email"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="邮箱" prop="email">
+                    <el-input style="width: 180px" v-model="formData.email"></el-input>
                 </el-form-item>
-                <el-form-item label="项目名称" prop="programName">
-                    <el-input v-model="formData.programName"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="项目名称" prop="programName">
+                    <el-input style="width: 180px" v-model="formData.programName"></el-input>
                 </el-form-item>
-                <el-form-item label="项目名称转大写" prop="programNameUpperCase">
-                    <el-input v-model="formData.programNameUpperCase"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="项目名称转大写" prop="programNameUpperCase">
+                    <el-input style="width: 180px" v-model="formData.programNameUpperCase"></el-input>
                 </el-form-item>
-                <el-form-item label="项目描述" prop="programDesc">
-                    <el-input v-model="formData.programDesc"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="项目描述" prop="programDesc">
+                    <el-input style="width: 180px" v-model="formData.programDesc"></el-input>
                 </el-form-item>
-                <el-form-item label="项目版本" prop="programVersion">
-                    <el-input v-model="formData.programVersion"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="项目版本" prop="programVersion">
+                    <el-input style="width: 180px" v-model="formData.programVersion"></el-input>
                 </el-form-item>
-                <el-form-item label="是否开启swagger" prop="enableSwagger">
-                    <el-radio v-model="formData.enableSwagger" :label="false">关闭</el-radio>
-                    <el-radio v-model="formData.enableSwagger" :label="true">开启</el-radio>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库IP" prop="dataBaseHost">
+                    <el-input style="width: 180px" v-model="formData.dataBaseHost"></el-input>
                 </el-form-item>
-                <el-form-item label="是否开启Spring Cache" prop="enableSpringCache">
-                    <el-radio v-model="formData.enableSpringCache" :label="false">关闭</el-radio>
-                    <el-radio v-model="formData.enableSpringCache" :label="true">开启</el-radio>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库端口" prop="dataBasePort">
+                    <el-input style="width: 180px" v-model="formData.dataBasePort"></el-input>
                 </el-form-item>
-                <el-form-item label="是否开启JSR303数据校验" prop="enableValidated">
-                    <el-radio v-model="formData.enableValidated" :label="false">关闭</el-radio>
-                    <el-radio v-model="formData.enableValidated" :label="true">开启</el-radio>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库名字" prop="dataBaseName">
+                    <el-input style="width: 180px" v-model="formData.dataBaseName"></el-input>
                 </el-form-item>
-                <el-form-item label="数据库IP" prop="dataBaseHost">
-                    <el-input v-model="formData.dataBaseHost"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库用户名" prop="dataBaseUserName">
+                    <el-input style="width: 180px" v-model="formData.dataBaseUserName"></el-input>
                 </el-form-item>
-                <el-form-item label="数据库端口" prop="dataBasePort">
-                    <el-input v-model="formData.dataBasePort"></el-input>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库密码" prop="dataBasePassword">
+                    <el-input style="width: 180px" v-model="formData.dataBasePassword"></el-input>
                 </el-form-item>
-                <el-form-item label="数据库名字" prop="dataBaseName">
-                    <el-input v-model="formData.dataBaseName"></el-input>
-                </el-form-item>
-                <el-form-item label="数据库用户名" prop="dataBaseUserName">
-                    <el-input v-model="formData.dataBaseUserName"></el-input>
-                </el-form-item>
-                <el-form-item label="数据库密码" prop="dataBasePassword">
-                    <el-input v-model="formData.dataBasePassword"></el-input>
-                </el-form-item>
-                <el-form-item label="数据库版本 【8.x和5.x】" prop="dataBaseVersion">
-                    <el-radio v-model="formData.dataBaseVersion" label="5.x">5.x</el-radio>
+                <el-form-item style="padding: 0 50px 0 0" label="数据库版本 【8.x和5.x】" prop="dataBaseVersion">
+                    <el-radio style="width: 90px" v-model="formData.dataBaseVersion" label="5.x">5.x</el-radio>
                     <el-radio v-model="formData.dataBaseVersion" label="8.x">8.x</el-radio>
                 </el-form-item>
-                <el-form-item label="使用前端界面配置还是很后端配置" prop="dataBaseVersion">
-                    <el-radio v-model="isUse" :label="0">前端</el-radio>
+                <el-form-item style="padding: 0 50px 0 0" label="使用前端界面配置还是很后端配置" prop="dataBaseVersion">
+                    <el-radio style="width: 90px" v-model="isUse" :label="0">前端</el-radio>
                     <el-radio v-model="isUse" :label="1">后端</el-radio>
+                </el-form-item>
+                <el-form-item style="padding: 0 50px 0 0" label="是否开启swagger" prop="enableSwagger">
+                    <el-radio style="width: 90px" v-model="formData.enableSwagger" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableSwagger" :label="true">开启</el-radio>
+                </el-form-item>
+                <el-form-item style="padding: 0 50px 0 0" label="是否开启Spring Cache" prop="enableSpringCache">
+                    <el-radio style="width: 90px" v-model="formData.enableSpringCache" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableSpringCache" :label="true">开启</el-radio>
+                </el-form-item>
+                <el-form-item style="padding: 0 50px 0 0" label="是否开启JSR303数据校验" prop="enableValidated">
+                    <el-radio style="width: 90px" v-model="formData.enableValidated" :label="false">关闭</el-radio>
+                    <el-radio v-model="formData.enableValidated" :label="true">开启</el-radio>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
