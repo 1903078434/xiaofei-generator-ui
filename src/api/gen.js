@@ -15,15 +15,16 @@ export function tableList(tableName, pageNo = 1, pageSize = 10) {
     })
 }
 
-export function createCode(generatorEntity, isUse, tableNames) {
+export function createCode(flag, generatorEntity, generateBySqlRequestVO, isUse, tableNames) {
     return request({
-        url: `/create`,
+        url: flag === 0 ? `/create` : `/create/sql`,
         method: "post",
         responseType: 'blob',
         data: {
             generatorEntity: generatorEntity,
             isUse: isUse,
-            tableNames: tableNames
+            tableNames: tableNames,
+            generateBySqlRequestVO: flag === 0 ? {} : generateBySqlRequestVO
         }
     })
 }

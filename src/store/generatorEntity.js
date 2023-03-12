@@ -10,6 +10,9 @@ export default {
         setIsUse(state, value) {
             state.isUse = value
         },
+        setGenerateBySqlRequestVO(state, value) {
+            state.generateBySqlRequestVO = value
+        },
     },
     //用于存储数据
     state: {
@@ -35,6 +38,11 @@ export default {
             dataBaseVersion: "8.x"
         },
         isUse: 0,//使用前端对代码生成的配置还是使用后端给的配置【0：前端   1：后端】
+        //导入的SQL
+        generateBySqlRequestVO: {
+            sql: "",
+            delimiter: ""
+        }
     },
     //用于将state中的数据进行加工，比如state中sum+1
     getters: {},

@@ -2,15 +2,22 @@
     <div style="max-width: 1200px;margin: 0 auto">
 
         <!-- 顶部搜素 -->
-        <el-row type="flex" class="row-bg" justify="space-between">
-            <el-col :span="10">
+        <el-row>
+            <el-col :xs="24" :sm="24" :md="24" :lg="24">
                 <el-input clearable v-model="tableName" placeholder="输入要过滤的表名 / 表备注"></el-input>
             </el-col>
-            <el-col :span="3">
+        </el-row>
+
+        <!-- 顶部按钮 -->
+        <el-row style="margin: 20px 0" type="flex" class="row-bg" justify="space-around">
+            <el-col :xs="7" :sm="7" :md="7" :lg="7" :xl="7">
                 <el-button type="success" @click="tableList">查询</el-button>
             </el-col>
-            <el-col :span="5">
+            <el-col :xs="7" :sm="7" :md="7" :lg="7" :xl="7">
                 <el-button type="primary" @click="dialogOpen">生成</el-button>
+            </el-col>
+            <el-col :xs="7" :sm="7" :md="7" :lg="7" :xl="7">
+                <el-button type="primary" @click="createBySql">导入SQL</el-button>
             </el-col>
         </el-row>
 
@@ -39,7 +46,7 @@
             </el-col>
         </el-row>
 
-        <!-- 设置添加或修改弹窗 -->
+        <!-- 生成通用化信息设置 -->
         <el-dialog :before-close="dialogCancel" :title="dialogTitle" :visible.sync="dialogVisible" width="1000px"
                    append-to-body>
             <el-form :model="formData" label-position="left" label-width="230px" :inline="true">
@@ -111,7 +118,25 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogCancel">取 消</el-button>
-                <el-button type="primary" @click="code">确 定</el-button>
+                <el-button type="primary" @click="code(0)">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <!-- SQL信息设置 -->
+        <el-dialog :before-close="dialogCancelBySql" :title="dialogTitleBySql" :visible.sync="dialogVisibleBySql"
+                   append-to-body>
+            <el-form :model="generateBySqlRequestVO" label-position="right">
+                <el-form-item style="padding: 0 50px 0 0" label="表语句分隔符" prop="user">
+                    <el-input v-model="generateBySqlRequestVO.delimiter"></el-input>
+                </el-form-item>
+                <el-form-item style="padding: 0 50px 0 0" label="SQL" prop="author">
+                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows: 99}"
+                              v-model="generateBySqlRequestVO.sql"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogCancelBySql">取 消</el-button>
+                <el-button type="primary" @click="code(1)">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -128,6 +153,7 @@ export default {
         this.tableList();
         this.formData = this.$store.state.generatorEntity.generatorEntity
         this.isUse = this.$store.state.generatorEntity.isUse
+        this.generateBySqlRequestVO = this.$store.state.generatorEntity.generateBySqlRequestVO
     },
     data() {
         return {
@@ -145,17 +171,28 @@ export default {
             multipleSelection: [],
             isUse: 0,//使用前端对代码生成的配置还是使用后端给的配置【0：前端   1：后端】
             formData: {},
+            //导入的SQL
+            generateBySqlRequestVO: {
+                sql: "",
+                delimiter: ""
+            },
             //数据加载动画
             dataListLoading: false,
             //弹窗标题
             dialogTitle: "",
             //弹窗是否显示
             dialogVisible: false,
+            //数据加载动画
+            dataListLoadingBySql: false,
+            //弹窗标题
+            dialogTitleBySql: "",
+            //弹窗是否显示
+            dialogVisibleBySql: false,
         };
     },
     methods: {
         //获取vuex中的函数
-        ...mapMutations('generatorEntity', ['setGeneratorEntity', 'setIsUse']),
+        ...mapMutations('generatorEntity', ['setGeneratorEntity', 'setIsUse', 'setGenerateBySqlRequestVO']),
         //获取表信息
         tableList() {
             tableList(this.tableName, this.page.pageNo, this.page.pageSize).then((response) => {
@@ -167,15 +204,20 @@ export default {
             this.multipleSelection = val;
         },
         //代码生成
-        code() {
-            this.setGeneratorEntity(this.formData)
-            this.setIsUse(this.isUse)
-            if (this.multipleSelection.length > 0) {
+        /**
+         * 代码生成
+         * @param flag 0：选中表生成  1：传SQL生成
+         */
+        code(flag = 0) {
+            if (this.multipleSelection.length > 0 || flag === 1) {
+                this.setGeneratorEntity(this.formData)
+                this.setGenerateBySqlRequestVO(this.generateBySqlRequestVO)
+                this.setIsUse(this.isUse)
                 let tableNames = []
                 this.multipleSelection.forEach(tableName => {
                     tableNames.push(tableName.tableName)
                 })
-                createCode(this.formData, this.isUse, tableNames).then(response => {
+                createCode(flag, this.formData, this.generateBySqlRequestVO, this.isUse, tableNames).then(response => {
                     const blob = new Blob([response], {type: 'application/zip'})
                     saveAs(blob, "xiaofei-generator");
                 })
@@ -201,9 +243,17 @@ export default {
                 this.$message.info("请选择需要生成代码的表")
             }
         },
+        //导入SQL
+        createBySql() {
+            this.dialogVisibleBySql = true
+        },
         //dialog中表单清空
         dialogCancel() {
             this.dialogVisible = false
+        },
+        //dialog中表单清空
+        dialogCancelBySql() {
+            this.dialogVisibleBySql = false
         },
 
     },
