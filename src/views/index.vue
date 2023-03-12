@@ -136,6 +136,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogCancelBySql">取 消</el-button>
+                <el-button @click="clearSqlAndDelimiter">重 置</el-button>
                 <el-button type="primary" @click="code(1)">确 定</el-button>
             </div>
         </el-dialog>
@@ -234,6 +235,14 @@ export default {
         changePageNo(pageNo) {
             this.page.pageNo = pageNo
             this.tableList()
+        },
+        //清空SQL语句填写表单
+        clearSqlAndDelimiter() {
+            this.generateBySqlRequestVO = {
+                sql: "",
+                delimiter: ""
+            }
+            this.setGenerateBySqlRequestVO(this.generateBySqlRequestVO)
         },
         //打开表单
         dialogOpen() {
